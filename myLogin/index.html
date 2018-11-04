@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>模拟登陆_wzb</title>
+	<script src="https://cdn.bootcss.com/jquery/3.3.0/jquery.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<meta charset="utf-8">
+</head>
+<body>
+<div class="warpper" style="height: 200px;width: 300px;margin: 0 auto;border: 1px solid red;">
+	<h1>云家园模拟登录</h1>
+	<label>学号<input type="text" id="userid"></label>
+	<br>
+	<label>密码<input type="text" id="password"></label>
+	<br>
+	<button type="submit" id="login_btn" >点击登录</button>
+</div>
+<script type="text/javascript">
+$("#login_btn").click(function () {
+	alert("click")
+})
+function toLogin(userid, password) {
+	console.log(userid, password)
+	axios.post('https://os.ncuos.com/api/user/token', {
+	    userid :userid,
+		password :password
+	})
+		.then(function (res) {
+			console.log(res)
+		})
+		.catch(function (err) {
+			throw new Error(err)
+		})
+}
+function toLoginControl() {
+	userid = $('#userid')
+	password = $('#password')
+	toLogin(userid, password)
+}
+$("#login_btn").click(function () {
+    toLoginControl()
+})
+</script>
+</body>
+</html>

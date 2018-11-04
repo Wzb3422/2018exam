@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>爬虫前端</title>
+	<script src="https://cdn.bootcss.com/jquery/3.3.0/jquery.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<style rel="stylesheet" type="text/css">
+		button {
+			width: 50px;
+			height: 30px;
+		}
+	</style>
+</head>
+<body>
+<div class="warpper">
+	<div class="header">
+		<label>点击按钮 爬取站点内容并输出至下方<button type="submit" id="btn_show"></button></label>
+	</div>
+	<div class="articles" id="contents">
+
+	</div>
+	<div>
+		<label>请输入搜索内容<input type="text" id="search_input"></label>
+		<label>点击搜索<button type="submit" id="search"></label>
+	</div>
+	<div id="searched">
+
+	</div>
+</div>
+<script>
+
+	function getArticleList() {
+        axios.get('http://127.0.0.1:5000/show')
+            .then(function (res){
+                console.log(res)
+                var articles = $('#contents')
+                if (res.data.length === 0) return
+                for (var i = 0; i < res.data.length; i++) {
+                    var arti = '<p>'+res.data.title[i] +'</p>'
+					+ '<p>'+ res.data.time[i] +'</p>'
+					+ '<p>' + res.data.summary[i] + '</p>'
+                    articles.append(arti)
+                }
+            })
+            .catch(function (err) {
+                throw new Error(err)
+            })
+    }
+    $("#btn_show").click(function () {
+        getArticleList()
+    })
+	function search(keyword) {
+        axios.post('http://127.0.0.1:5000/search',{
+            keyword: keyword
+		})
+            .then(function (res){
+                console.log(res)
+				var searched = $('#searched')
+                if (res.data.length === 0) return
+                for (var i = 0; i < res.data.length; i++) {
+                    var searchResults = '<p>'+res.data.title[i] +'</p>'
+                        + '<p>'+ res.data.time[i] +'</p>'
+                        + '<p>' + res.data.summary[i] + '</p>'
+                    searched.append(searchResults)
+                }
+            })
+            .catch(function (err) {
+                throw new Error(err)
+            })
+    }
+    function searchControl() {
+		var keyword = $("#search_input")
+		search(keyword.val())
+    }
+    $("#search").click(function () {
+		searchControl()
+    })
+</script>
+</body>
+</html>
